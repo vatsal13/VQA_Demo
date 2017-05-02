@@ -87,7 +87,7 @@ def main():
     parser.add_argument('-question', type=str, default='What vechile is in the picture?')
     args = parser.parse_args()
 
-    
+    verbose = False
     if verbose : print("\n\n\nLoading image features ...")
     image_features = get_image_features(args.image_file_name, CNN_weights_file_name)
 
@@ -98,7 +98,8 @@ def main():
     vqa_model = get_VQA_model(VQA_weights_file_name)
 
 
-    if verbose : print("\n\n\nPredicting result ...") 
+    if verbose : print("\n\n\nPredicting result ...")
+    print(args.question) 
     y_output = vqa_model.predict([question_features, image_features])
     y_sort_index = np.argsort(y_output)
 
@@ -109,6 +110,6 @@ def main():
     labelencoder = joblib.load(label_encoder_file_name)
     for label in reversed(y_sort_index[0,-5:]):
         print str(round(y_output[0,label]*100,2)).zfill(5), "% ", labelencoder.inverse_transform(label)
-
+    print("\n")
 if __name__ == "__main__":
     main()
